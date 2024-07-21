@@ -1,19 +1,14 @@
-#!/bin/bash
+# Start with a base image containing Java runtime
+FROM openjdk:17-jdk-slim
 
-# base 이미지 설정
-FROM openjdk:17
+# Set the working directory
+WORKDIR /app
 
-# jar 파일 위치를 변수로 설정
-ARG JAR_FILE=build/libs/*.jar
+# Copy the built JAR file into the image
+COPY build/libs/*.jar app.jar
 
-# 환경변수 설정
-ENV CUSTOM_NAME default
-
-# jar 파일을 컨테이너 내부에 복사
-COPY ${JAR_FILE} test-app.jar
-
-# 외부 호스트 8080 포트로 노출
+# Expose the port the application runs on
 EXPOSE 8080
 
-# 실행 명령어
-CMD ["java", "-Dtest.customName=${CUSTOM_NAME}", "-jar", "test-app.jar"]
+# Run the JAR file
+CMD ["java", "-jar", "app.jar"]
